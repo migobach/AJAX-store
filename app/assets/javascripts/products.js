@@ -1,8 +1,10 @@
 
+  var editId;
 
 
 $(document).ready( function() {
 
+  
   $.ajax({
     url: 'http://json-server.devpointlabs.com/api/v1/products',
     method: 'GET',
@@ -18,8 +20,19 @@ $(document).ready( function() {
 
   // original up above
 
-
-
+  $(document).on('click', '.edit', function(prod) {
+    editId = this.parentNode.dataset.prodId
+    $.ajax({
+      url: 'http://json-server.devpointlabs.com/api/v1/products/' + editId,
+      method: 'GET',
+      dataType: 'JSON'
+    }).done( function(product){
+      $('#name').val(`${product.name}`)
+      $('#price').val(`${product.base_price}`)
+      $('#desc').val(`${product.description}`)
+      editId = product.id
+    })
+  })
 
   //1: get item information from the server @ id
       //2: populate the form from the server item 
@@ -29,18 +42,40 @@ $(document).ready( function() {
   // original down below
 
   $('#submit_button').on('click', function() {
+    editId
     var name = $('#name').val()
     var base_price = $('#price').val()
     var description = $('#desc').val()
-    var prod = { product: {name: name, base_price: base_price, description: description } }
-   
-    // AJAX REQUEST POSTING TO SERVER 
+    var urlVal = ( editId == null ) ? 'http://json-server.devpointlabs.com/api/v1/products' : 'http://json-server.devpointlabs.com/api/v1/products' + editId
+    var typeVal = ( editId == null ) ? 'POST' : 'PUT'
+    var prodVal = (editId == null ) ? { product: {name: name, base_price: base_price, description: description } } : { product: {id: prodId, name: name, base_price: base_price, description: description } } 
+    debugger
+
     $.ajax({
-      url: 'http://json-server.devpointlabs.com/api/v1/products',
-      type: 'POST',
-      datatype: 'JSON',
-      data: prod 
-    })
+          url: urlVal, 
+          type: typeVal,
+          datatype: 'JSON',
+          data: prodVal 
+        })
+
+
+    // AJAX REQUEST POSTING TO SERVER 
+    // if (editId = null ) {
+    //   debugger
+    //   $.ajax({
+    //     url: 'http://json-server.devpointlabs.com/api/v1/products',
+    //     type: 'POST',
+    //     datatype: 'JSON',
+    //     data: prod 
+    //   })
+    // }
+    // else
+    //   $.ajax({
+    //     url: 'http://json-server.devpointlabs.com/api/v1/products' + prodId, 
+    //     type: 'PUT',
+    //     datatype: 'JSON',
+    //     data: prod
+    //   })
   
     // FAKING THE USER TO BELIEVE THE PAGE UPDATED
     .done( function(prod) {
@@ -56,20 +91,7 @@ $(document).ready( function() {
 
   //  here is how I am supposed to be able to edit EDIT FUNCTION
 
-    $(document).on('click', '.edit', function(prod) {
-      editId = this.parentNode.dataset.prodId
-      $.ajax({
-        url: 'http://json-server.devpointlabs.com/api/v1/products/' + editId,
-        method: 'GET',
-        dataType: 'JSON'
-      }).done( function(product){
-        $('#name').val(`${product.name}`)
-        $('#price').val(`${product.base_price}`)
-        $('#desc').val(`${product.description}`)
-        editId = product.id
-        debugger
-      })
-    })
+    
 
     //   debugger
     //   $('#name') = prod.name
