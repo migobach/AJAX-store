@@ -84,9 +84,8 @@ $(document).ready( function() {
       url: 'http://json-server.devpointlabs.com/api/v1/products/' + delId,
       method: 'DELETE'
     }).done( function() {
-      var row = $("[data-product-id='" + delId + "'")
+      var row = $("[data-prod-id='" + delId + "'")
       row.remove('li');
-      debugger
     });
   } )
 })
