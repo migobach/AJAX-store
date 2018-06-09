@@ -46,7 +46,7 @@ $(document).ready( function() {
   // here is how I am supposed to be able to edit EDIT FUNCTION
 
   $(document).on('click', '.edit', function(prod) {
-    editId = $(this).parentNode.dataset.prodId
+    editId = this.parentNode.dataset.prodId
     debugger
     $('#name') = prod.name
     $('#price') = prod.base_price
@@ -76,6 +76,21 @@ $(document).ready( function() {
       alert(err.responseJSON.errors)
     });
   })
+
+  $(document).on('click', '.delete', function(prod) {
+    // debugger
+    delId = this.parentNode.dataset.prodId
+    $.ajax({
+      url: 'http://json-server.devpointlabs.com/api/v1/products/' + delId,
+      method: 'DELETE'
+    }).done( function() {
+      var row = $("[data-product-id='" + delId + "'")
+      row.remove('li');
+      debugger
+    });
+  } )
+})
+
       // debugger 
 
 
@@ -97,8 +112,7 @@ $(document).ready( function() {
   //       type: method,
   //       data: data,
   //       success: callback
-  //   });
-})
+  //   })
 
 
 // $(document).on('click', '.game-item', function() {
